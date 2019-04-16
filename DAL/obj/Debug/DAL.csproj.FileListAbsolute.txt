@@ -1,0 +1,16 @@
+C:\Users\Vlad\Desktop\FinalProject\DAL\bin\Debug\DAL.dll.config
+C:\Users\Vlad\Desktop\FinalProject\DAL\bin\Debug\DAL.dll
+C:\Users\Vlad\Desktop\FinalProject\DAL\bin\Debug\DAL.pdb
+C:\Users\Vlad\Desktop\FinalProject\DAL\bin\Debug\EntityFramework.dll
+C:\Users\Vlad\Desktop\FinalProject\DAL\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Vlad\Desktop\FinalProject\DAL\bin\Debug\EntityFramework.xml
+C:\Users\Vlad\Desktop\FinalProject\DAL\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Vlad\Desktop\FinalProject\DAL\obj\Debug\DAL.csprojAssemblyReference.cache
+C:\Users\Vlad\Desktop\FinalProject\DAL\obj\Debug\DAL.csproj.CoreCompileInputs.cache
+C:\Users\Vlad\Desktop\FinalProject\DAL\obj\Debug\DAL.csproj.CopyComplete
+C:\Users\Vlad\Desktop\FinalProject\DAL\obj\Debug\DAL.dll
+C:\Users\Vlad\Desktop\FinalProject\DAL\obj\Debug\DAL.pdb
+C:\Users\Vlad\Desktop\FinalProject\DAL\bin\Debug\System.Web.Helpers.Crypto.dll
+C:\Users\Vlad\Desktop\FinalProject\DAL\bin\Debug\System.Web.Helpers.Crypto.pdb
+C:\Users\Vlad\Desktop\FinalProject\DAL\bin\Debug\ru\EntityFramework.resources.dll
+C:\Users\Vlad\Desktop\FinalProject\DAL\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
