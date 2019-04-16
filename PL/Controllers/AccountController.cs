@@ -85,14 +85,13 @@ namespace PL.Controllers
             }
 
             var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
-
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
             }
-
+            await UserManager.AddToRoleAsync(user.Id, "User");
             return Ok();
         }
         protected override void Dispose(bool disposing)

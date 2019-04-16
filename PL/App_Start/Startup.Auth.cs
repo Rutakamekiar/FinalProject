@@ -41,7 +41,6 @@ namespace PL
 
             // Включение использования приложением маркера-носителя для аутентификации пользователей
             app.UseOAuthBearerTokens(OAuthOptions);
-
         }
     }
 }

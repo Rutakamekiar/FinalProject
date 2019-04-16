@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
@@ -41,6 +42,16 @@ namespace BLL.Services
         public HashSet<FileDTO> GetAll()
         {
             return Mapper.Map<HashSet<FileDTO>>(_data.Files.GetAll());
+        }
+
+        public List<FileDTO> GetAllByUserId(string userid)
+        {
+            return GetAll().Where(f => f.UserId.Equals(userid)).ToList();
+        }
+
+        public FileDTO GetByName(string name)
+        {
+            return GetAll().Where(f => f.Name.Contains(name)).OrderBy(f=>f.Name).FirstOrDefault();
         }
     }
 }

@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity;
 namespace PL.Controllers
 {
     [Authorize]
+    [RoutePrefix("api/files")]
     public class FilesController : ApiController
     {
         private readonly IFileService _fileService;
@@ -24,10 +25,18 @@ namespace PL.Controllers
         [HttpGet]
         public IHttpActionResult Get()
         {
-            return Ok(_fileService.GetAll().SkipWhile(f=>!f.UserId.Equals(User.Identity.GetUserId())));
+            return Ok(_fileService.GetAllByUserId(User.Identity.GetUserId()));
+        }
+        [HttpGet]
+        [Authorize(Roles = "Manager")]
+        [Route("getAll")]
+        public IHttpActionResult GetAll()
+        {
+            return Ok(_fileService.GetAll());
         }
         [HttpGet]
         [AllowAnonymous]
+        [Route("{id}")]
         public HttpResponseMessage Get(int id)
         {
             try
@@ -97,14 +106,36 @@ namespace PL.Controllers
             };
         }
         [HttpDelete]
-        public IHttpActionResult DeleteFile(int id)
+        public IHttpActionResult DeleteFile(string name)
         {
             try
             {
-                var file = _fileService.Get(id);
+                var file = _fileService.GetByName(name);
+                if (file == null || file.UserId != User.Identity.GetUserId())
+                    return BadRequest("File not found");
                 string fullPath = HttpContext.Current.Server.MapPath(CreateFileFullPath(file));
                 File.Delete(fullPath);
-                _fileService.Delete(id);
+                _fileService.Delete(file.Id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete]
+        [Authorize(Roles = "Admin")]
+        [Route("deleteUserFile")]
+        public IHttpActionResult DeleteUserFile(string name)
+        {
+            try
+            {
+                var file = _fileService.GetByName(name);
+                if (file == null)
+                    return BadRequest("File not found");
+                string fullPath = HttpContext.Current.Server.MapPath(CreateFileFullPath(file));
+                File.Delete(fullPath);
+                _fileService.Delete(file.Id);
                 return Ok();
             }
             catch (Exception ex)
