@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -141,6 +142,26 @@ namespace PL.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut]
+        [Route("{id}")]
+        public IHttpActionResult EditFile(int id, [FromBody]FileDTO file)
+        {
+            try
+            {
+                var fileDto = _fileService.Get(id);
+                if (fileDto.UserId == User.Identity.GetUserId())
+                {
+                    _fileService.EditFile(id, file);
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                else
+                    return StatusCode(HttpStatusCode.Forbidden);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
     }

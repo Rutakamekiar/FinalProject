@@ -53,5 +53,13 @@ namespace BLL.Services
         {
             return GetAll().Where(f => f.Name.Contains(name)).OrderBy(f=>f.Name).FirstOrDefault();
         }
+        public void EditFile(int id, FileDTO fileDto)
+        {
+            var newFile = _data.Files.Get(id);
+            newFile.Name = fileDto.Name;
+            newFile.AccessLevel = fileDto.AccessLevel;
+            _data.Files.Update(newFile);
+            _data.Save();
+        }
     }
 }

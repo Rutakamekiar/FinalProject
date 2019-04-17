@@ -9,5 +9,7 @@ namespace DAL.Interfaces.RepositoryInterfaces
         T Get(int id);
         void Create(T item);
         void Delete(int id);
+        void Update(T file);
+
     }
 }
