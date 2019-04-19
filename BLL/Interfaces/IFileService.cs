@@ -7,6 +7,6 @@ namespace BLL.Interfaces
     {
         FileDTO GetByName(string name);
         List<FileDTO> GetAllByUserId(string userid);
-        void EditFile(int id, FileDTO fileDto);
+        void EditFile(string id, FileDTO fileDto);
     }
 }

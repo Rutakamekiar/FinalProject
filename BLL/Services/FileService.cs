@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
-using DAL.Entities;
 using DAL.Interfaces;
+using File = DAL.Entities.File;
 
 namespace BLL.Services
 {
@@ -51,14 +52,15 @@ namespace BLL.Services
 
         public FileDTO GetByName(string name)
         {
-            return GetAll().Where(f => f.Name.Contains(name)).OrderBy(f=>f.Name).FirstOrDefault();
+            return GetAll().Where(f => f.Name.Contains(name)).OrderBy(f => f.Name).First()
+                   ?? throw new FileNotFoundException($"File with name = {name} was not found"); ;
         }
-        public void EditFile(int id, FileDTO fileDto)
+        public void EditFile(string name, FileDTO fileDto)
         {
-            var newFile = _data.Files.Get(id);
+            var newFile = GetByName(name);
             newFile.Name = fileDto.Name;
             newFile.AccessLevel = fileDto.AccessLevel;
-            _data.Files.Update(newFile);
+            _data.Files.Update(Mapper.Map<File>(newFile));
             _data.Save();
         }
     }

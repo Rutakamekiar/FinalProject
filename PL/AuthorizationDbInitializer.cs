@@ -15,9 +15,9 @@ namespace PL
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
 
             // создаем две роли
-            IdentityRole admin = new IdentityRole { Name = "Admin" };
-            IdentityRole manager = new IdentityRole { Name = "Manager" };
-            IdentityRole user = new IdentityRole { Name = "User" };
+            IdentityRole admin = new IdentityRole { Name = Roles.Admin.ToString() };
+            IdentityRole manager = new IdentityRole { Name = Roles.Manager.ToString()};
+            IdentityRole user = new IdentityRole { Name = Roles.User.ToString() };
 
             // добавляем роли в бд
             roleManager.Create(admin);

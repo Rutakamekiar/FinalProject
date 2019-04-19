@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -84,14 +86,20 @@ namespace PL.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (UserManager.Users.Any(u=>u.Email.Equals(model.Email)))
+                return BadRequest($"A user with email address {model.Email} already exists.");
             var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
+            await UserManager.AddToRoleAsync(user.Id, Roles.User.ToString());
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
             }
-            await UserManager.AddToRoleAsync(user.Id, "User");
+            var root = HttpContext.Current.Server.MapPath($"~/Files/{user.Id}");
+            if (!Directory.Exists(root))
+            {
+                Directory.CreateDirectory(root);
+            }
             return Ok();
         }
         protected override void Dispose(bool disposing)

@@ -12,9 +12,9 @@ namespace DependencyResolver
     {
         public override void Load()
         {
-            Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
-            Bind<DbContext>().To<Context>().InRequestScope();
-            Bind<IFileRepository>().To<FileRepository>().InRequestScope();
+            Bind<IUnitOfWork>().To<UnitOfWork>().InSingletonScope();
+            Bind<DbContext>().To<Context>().InSingletonScope();
+            Bind<IFileRepository>().To<FileRepository>().InSingletonScope();
         }
     }
 }

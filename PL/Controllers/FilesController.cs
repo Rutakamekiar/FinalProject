@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using System.Web.Security;
 using BLL.DTO;
 using BLL.Interfaces;
 using Microsoft.AspNet.Identity;
@@ -26,26 +27,21 @@ namespace PL.Controllers
         [HttpGet]
         public IHttpActionResult Get()
         {
+            if(User.IsInRole("Manager"))
+                return Ok(_fileService.GetAll());
             return Ok(_fileService.GetAllByUserId(User.Identity.GetUserId()));
         }
         [HttpGet]
-        [Authorize(Roles = "Manager")]
-        [Route("getAll")]
-        public IHttpActionResult GetAll()
-        {
-            return Ok(_fileService.GetAll());
-        }
-        [HttpGet]
         [AllowAnonymous]
-        [Route("{id}")]
-        public HttpResponseMessage Get(int id)
+        [Route("{name}")]
+        public HttpResponseMessage Get(string name)
         {
             try
             {
-                var file = _fileService.Get(id);
+                var file = _fileService.GetByName(name);
                 if(file.AccessLevel == 0)
-                    return new HttpResponseMessage(HttpStatusCode.NotFound); ;
-                var dataBytes = File.ReadAllBytes($"C:/Users/Vlad/Desktop/FinalProject/PL/Files/{file.Name}");
+                    return new HttpResponseMessage(HttpStatusCode.NotFound);
+                var dataBytes = File.ReadAllBytes(CreateFileFullPath(file));
                 var dataStream = new MemoryStream(dataBytes);
 
                 HttpResponseMessage httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK);
@@ -58,20 +54,15 @@ namespace PL.Controllers
 
                 return httpResponseMessage;
             }
-            catch (FileNotFoundException)
-            {
-                return new HttpResponseMessage(HttpStatusCode.NotFound); ;
-            }
             catch (Exception)
             {
                 return new HttpResponseMessage(HttpStatusCode.BadRequest); ;
             }
             
         }
-
         private string CreateFileFullPath(FileDTO fileDTO)
         {
-            return $"{fileDTO.Path}/{fileDTO.Name}";
+            return HttpContext.Current.Server.MapPath($"{fileDTO.Path}/{fileDTO.UserId}/{fileDTO.Name}");
         }
 
         [HttpPost]
@@ -81,14 +72,15 @@ namespace PL.Controllers
             {
                 HttpRequest request = HttpContext.Current.Request;
                 if (request.Files.Count <= 0)
-                    return BadRequest("File was not found.Please upload it.");
+                    return BadRequest("File was not found. Please upload it.");
                 var file = request.Files[0];
+                if(File.Exists(HttpContext.Current.Server.MapPath($"~/Files/{User.Identity.GetUserId()}/{file.FileName}")))
+                    return BadRequest("The file with the specified name exists. Please change the file name");
                 if (!(file?.ContentLength > 0))
                     return BadRequest("file?.ContentLength > 0");
                 FileDTO fileDto = CreateFileDto(file.FileName);
                 _fileService.Create(fileDto);
-                file.SaveAs(HttpContext.Current.Server.MapPath
-                    (CreateFileFullPath(fileDto)));
+                file.SaveAs(CreateFileFullPath(fileDto));
                 return Ok();
             }
             catch (Exception ex)
@@ -112,9 +104,9 @@ namespace PL.Controllers
             try
             {
                 var file = _fileService.GetByName(name);
-                if (file == null || file.UserId != User.Identity.GetUserId())
-                    return BadRequest("File not found");
-                string fullPath = HttpContext.Current.Server.MapPath(CreateFileFullPath(file));
+                if (!User.IsInRole("Admin") && file.UserId != User.Identity.GetUserId())
+                        return BadRequest($"File not found; {file.UserId} | {User.Identity.GetUserId()}");
+                string fullPath = CreateFileFullPath(file);
                 File.Delete(fullPath);
                 _fileService.Delete(file.Id);
                 return Ok();
@@ -124,40 +116,23 @@ namespace PL.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete]
-        [Authorize(Roles = "Admin")]
-        [Route("deleteUserFile")]
-        public IHttpActionResult DeleteUserFile(string name)
-        {
-            try
-            {
-                var file = _fileService.GetByName(name);
-                if (file == null)
-                    return BadRequest("File not found");
-                string fullPath = HttpContext.Current.Server.MapPath(CreateFileFullPath(file));
-                File.Delete(fullPath);
-                _fileService.Delete(file.Id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        
         [HttpPut]
-        [Route("{id}")]
-        public IHttpActionResult EditFile(int id, [FromBody]FileDTO file)
+        //[Route("{name}")]
+        public IHttpActionResult EditFile(string name, [FromBody]FileDTO file)
         {
             try
             {
-                var fileDto = _fileService.Get(id);
+                var fileDto = _fileService.GetByName(name);
                 if (fileDto.UserId == User.Identity.GetUserId())
                 {
-                    _fileService.EditFile(id, file);
+                    _fileService.EditFile(name, file);
                     return StatusCode(HttpStatusCode.NoContent);
                 }
                 else
+                {
                     return StatusCode(HttpStatusCode.Forbidden);
+                }
             }
             catch (Exception e)
             {
