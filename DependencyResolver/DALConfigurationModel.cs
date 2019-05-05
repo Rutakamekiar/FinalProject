@@ -15,6 +15,7 @@ namespace DependencyResolver
             Bind<IUnitOfWork>().To<UnitOfWork>().InSingletonScope();
             Bind<DbContext>().To<Context>().InSingletonScope();
             Bind<IFileRepository>().To<FileRepository>().InSingletonScope();
+            Bind<IFolderRepository>().To<FolderRepository>().InSingletonScope();
         }
     }
 }

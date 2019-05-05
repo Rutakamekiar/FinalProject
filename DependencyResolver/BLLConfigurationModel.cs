@@ -9,6 +9,7 @@ namespace DependencyResolverConfig
         public override void Load()
         {
             Bind<IFileService>().To<FileService>();
+            Bind<IFolderService>().To<FolderService>();
         }
     }
 }
