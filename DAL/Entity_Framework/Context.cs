@@ -8,6 +8,7 @@ namespace DAL.Entity_Framework
     public sealed class Context : DbContext
     {
         public DbSet<File> Files { get; set; }
+        public DbSet<Folder> Folders { get; set; }
 
         static Context()
         {
@@ -21,6 +22,8 @@ namespace DAL.Entity_Framework
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new FileConfig());
+            modelBuilder.Configurations.Add(new FolderConfig());
+
             modelBuilder.Conventions.Add(new StringConvention());
         }
     }

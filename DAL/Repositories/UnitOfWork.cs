@@ -5,15 +5,16 @@ using System.Data.Entity;
 
 namespace DAL.Repositories
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly DbContext _context;
         public IFileRepository Files { get; }
-
-        public UnitOfWork(DbContext context, IFileRepository files)
+        public IFolderRepository Folders { get;}
+        public UnitOfWork(DbContext context, IFileRepository files, IFolderRepository folders)
         {
             _context = context;
             Files = files;
+            Folders = folders;
         }
 
         private bool disposed = false;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
@@ -8,16 +7,12 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
+using BLL.Interfaces;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.OAuth;
 using PL.Models;
-using PL.Providers;
-using PL.Results;
 
 namespace PL.Controllers
 {
@@ -27,15 +22,19 @@ namespace PL.Controllers
     {
         private ApplicationUserManager _userManager;
 
-        public AccountController()
-        {
-        }
+        private readonly IFolderService _folderService;
 
+        public AccountController(IFolderService folderService)
+        {
+            _folderService = folderService;
+        }
         public AccountController(ApplicationUserManager userManager,
-            ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+            ISecureDataFormat<AuthenticationTicket> accessTokenFormat,
+            IFolderService folderService)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
+            _folderService = folderService;
         }
 
         public ApplicationUserManager UserManager
@@ -95,11 +94,8 @@ namespace PL.Controllers
             {
                 return GetErrorResult(result);
             }
-            var root = HttpContext.Current.Server.MapPath($"~/Files/{user.Id}");
-            if (!Directory.Exists(root))
-            {
-                Directory.CreateDirectory(root);
-            }
+            _folderService.CreateRootFolder(user.Id, user.Email);
+            
             return Ok();
         }
         protected override void Dispose(bool disposing)

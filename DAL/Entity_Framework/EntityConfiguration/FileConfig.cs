@@ -9,8 +9,9 @@ namespace DAL.Entity_Framework.EntityConfiguration
         {
             Property(f => f.Name).IsRequired();
             Property(f => f.AccessLevel).IsRequired();
-            Property(f => f.Path).IsRequired();
-            Property(f => f.UserId).IsRequired();
+            Property(f => f.FolderId).IsRequired();
+            HasRequired(f=>f.Folder).WithMany(f=>f.Files).WillCascadeOnDelete(true);
+
         }
     }
 }

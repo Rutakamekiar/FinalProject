@@ -4,8 +4,9 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Path { get; set; }
         public int AccessLevel { get; set; }
-        public string UserId { get; set; }
+        public int FolderId { get; set; }
+        public FolderDTO Folder { get; set; }
+        public byte[] FileBytes { get; set; }
     }
 }

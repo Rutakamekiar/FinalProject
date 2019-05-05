@@ -1,7 +1,5 @@
 {
-  "ProjectFilePath": "c:\\Users\\Vlad\\Desktop\\FinalProject\\PL\\PL.csproj",
-  "TargetFramework": "v4.6.1",
-  "TagHelpers": [],
+  "FilePath": "c:\\Users\\Vlad\\Desktop\\FinalProject\\PL\\PL.csproj",
   "Configuration": {
     "ConfigurationName": "UnsupportedRazor",
     "LanguageVersion": "1.0",
@@ -10,5 +8,11 @@
         "ExtensionName": "UnsupportedRazorExtension"
       }
     ]
-  }
+  },
+  "ProjectWorkspaceState": {
+    "TagHelpers": [],
+    "CSharpLanguageVersion": 703
+  },
+  "RootNamespace": null,
+  "Documents": []
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL.MappingProfiles;
+using PL.MappingProfiles;
 
 namespace PL.Infrastructure
 {
@@ -10,6 +11,9 @@ namespace PL.Infrastructure
             Mapper.Initialize((config) =>
             {
                 config.AddProfile<FileMapConfig>();
+                config.AddProfile<FolderMapConfig>();
+                config.AddProfile<FolderMappingProfile>();
+                config.AddProfile<FileMappingProfile>();
             });
         }
     }

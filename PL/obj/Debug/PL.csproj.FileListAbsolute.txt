@@ -160,3 +160,6 @@ C:\Users\Vlad\Desktop\FinalProject\PL\obj\Debug\PL.csproj.CoreCompileInputs.cach
 C:\Users\Vlad\Desktop\FinalProject\PL\obj\Debug\PL.csproj.CopyComplete
 C:\Users\Vlad\Desktop\FinalProject\PL\obj\Debug\PL.dll
 C:\Users\Vlad\Desktop\FinalProject\PL\obj\Debug\PL.pdb
+C:\Users\Vlad\Desktop\FinalProject\PL\bin\Microsoft.Owin.Cors.dll
+C:\Users\Vlad\Desktop\FinalProject\PL\bin\Microsoft.Owin.Cors.xml
+C:\Users\Vlad\Desktop\FinalProject\PL\bin\ru\Microsoft.Owin.resources.dll
