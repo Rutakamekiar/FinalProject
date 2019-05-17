@@ -21,10 +21,9 @@ namespace DAL.Entity_Framework
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Conventions.Add(new StringConvention());
             modelBuilder.Configurations.Add(new FileConfig());
             modelBuilder.Configurations.Add(new FolderConfig());
-
-            modelBuilder.Conventions.Add(new StringConvention());
         }
     }
 }

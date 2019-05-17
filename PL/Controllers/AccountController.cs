@@ -66,14 +66,6 @@ namespace PL.Controllers
             };
         }
 
-        // POST api/Account/Logout
-        [Route("Logout")]
-        public IHttpActionResult Logout()
-        {
-            Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
-            return Ok();
-        }
-
         
         // POST api/Account/Register
         [AllowAnonymous]

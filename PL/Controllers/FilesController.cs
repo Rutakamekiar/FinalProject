@@ -61,7 +61,7 @@ namespace PL.Controllers
             HttpRequest request = HttpContext.Current.Request;
             if (request.Files.Count <= 0)
                 return BadRequest("File was not found. Please upload it.");
-            var file = request.Files[0];
+            var file = request.Files["File"];
             if (file?.ContentLength <= 0)
                 return BadRequest("File have not content");
             FileDTO fileDto = new FileDTO

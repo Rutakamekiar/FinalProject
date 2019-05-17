@@ -7,8 +7,8 @@ namespace DAL.Entity_Framework.EntityConfiguration
     {
         public FolderConfig()
         {
-            //Property(f => f.UserId).IsRequired();
-            //Property(f => f.Path).IsRequired();
+            Property(f => f.UserId).IsRequired();
+            Property(f => f.Path).IsRequired();
             Property(f => f.Name).IsRequired();
             HasMany(f => f.Files)
                 .WithRequired(f => f.Folder)
@@ -16,9 +16,9 @@ namespace DAL.Entity_Framework.EntityConfiguration
                 .WillCascadeOnDelete(true);
             HasMany(f => f.Folders)
                 .WithOptional(f => f.ParentFolder)
-                .HasForeignKey(f => f.ParentFolderId)
-                ;//.WillCascadeOnDelete(true);
-            HasOptional(f => f.ParentFolder).WithMany(f => f.Folders);//.WillCascadeOnDelete(true);
+                .HasForeignKey(f => f.ParentFolderId);
+            HasOptional(f => f.ParentFolder)
+                .WithMany(f => f.Folders);
         }
     }
 }

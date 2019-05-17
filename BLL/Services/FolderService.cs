@@ -13,11 +13,13 @@ namespace BLL.Services
     public class FolderService : IFolderService
     {
         private readonly IUnitOfWork _data;
+        private IFileService _fileService;
         public const string RootPath = @"C:\Users\Vlad\Desktop\FinalProject\Content\";
 
-        public FolderService(IUnitOfWork data)
+        public FolderService(IUnitOfWork data, IFileService fileService)
         {
             _data = data;
+            _fileService = fileService;
         }
         //Ok
         public HashSet<FolderDTO> GetAll()
@@ -25,10 +27,13 @@ namespace BLL.Services
             return Mapper.Map<HashSet<FolderDTO>>(_data.Folders.GetAll());
         }
         //Ok
-        public HashSet<FolderDTO> GetAllFolderContentByUserId(string userId)
+        public FolderDTO GetRootFolderContentByUserId(string userId)
         {
-            return Mapper.Map<HashSet<FolderDTO>>(
-                _data.Folders.GetAll().Where(f=>f.UserId.Equals(userId)));
+            return Mapper.Map<FolderDTO>(
+                _data.Folders.GetAll()
+                    .Where(f => f.UserId.Equals(userId))
+                    .Where(f => f.ParentFolderId.Equals(null)).FirstOrDefault()
+                ?? throw new FolderNotFoundException($"Cannot find root folder with userId = {userId}"));
         }
         //Ok
         public FolderDTO Get(int id)
@@ -36,15 +41,20 @@ namespace BLL.Services
             return Mapper.Map<FolderDTO>(_data.Folders.Get(id));
         }
         //Ok
+        public FolderDTO GetByUserId(int id, string userId)
+        {
+            var folder = Mapper.Map<FolderDTO>(_data.Folders.Get(id));
+            return folder.UserId.Equals(userId)
+                ? folder
+                : throw new FolderNotFoundException($"Cannot find folder with id = {id} and userId = {userId}");
+        }
+
+        //Ok
         public void Create(FolderDTO item)
         {
             _data.Folders.Create(Mapper.Map<Folder>(item));
-            CreatePhysicalFolder();
+            Directory.CreateDirectory(ReturnFullFolderPath(item));
             _data.Save();
-            void CreatePhysicalFolder()
-            {
-                Directory.CreateDirectory(ReturnFullFolderPath(item));
-            }
         }
 
         //Ok
@@ -55,7 +65,7 @@ namespace BLL.Services
         //Ok
         private string ReturnFullFolderPath(FolderDTO item)
         {
-            return RootPath + item.Path + @"\" + item.Name;
+            return RootPath + ReturnFolderPath(item);
         }
         //Ok
         public void EditFolder(int id, FolderDTO item)
@@ -71,14 +81,14 @@ namespace BLL.Services
         }
         public void Delete(FolderDTO folderDto)
         {
-            Folder folder = _data.Folders.Get(folderDto.Id);
-            if (folder.Files.Count == 0)
-            {
-                foreach (var file in folder.Files)
-                {
+            if (!folderDto.Files.Count.Equals(0))
+                foreach (var file in folderDto.Files)
+                    _fileService.Delete(file);
 
-                }
-            }
+            if (!folderDto.Folders.Count.Equals(0))
+                foreach (var folder in folderDto.Folders)
+                    Delete(folder);
+
             _data.Folders.Delete(folderDto.Id);
             Directory.Delete(ReturnFullFolderPath(folderDto));
             _data.Save();

@@ -13,7 +13,6 @@ namespace PL
             // Настройка Web API для использования только проверки подлинности посредством маркера-носителя.
             config.SuppressDefaultHostAuthentication();
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
-
             config.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());
 
             // Маршруты Web API
@@ -24,7 +23,7 @@ namespace PL
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-            config.Formatters.Remove(config.Formatters.XmlFormatter);
+            // config.Formatters.Remove(config.Formatters.XmlFormatter);
 
         }
     }

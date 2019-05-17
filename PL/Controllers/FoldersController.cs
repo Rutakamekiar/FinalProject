@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Web;
 using System.Web.Http;
 using AutoMapper;
 using BLL.DTO;
@@ -24,11 +26,14 @@ namespace PL.Controllers
 
         //Ok
         [HttpPost]
-        public IHttpActionResult CreateFolderInFolder(int folderId, string name)
+        public IHttpActionResult CreateFolderInFolder()
         {
-            var parent = _folderService.Get(folderId);
+            HttpRequest request = HttpContext.Current.Request;
+            int parentId = Convert.ToInt32(request.Form.Get("parentId"));
+            string name = request.Form.Get("name");
+            var parent = _folderService.Get(parentId);
             if (parent.UserId != User.Identity.GetUserId())
-                return BadRequest("cannot create folder in enemy folder");
+                return BadRequest("cannot create folder in folders of others");
             return Ok(_folderService.CreateFolderInFolder(parent, name));
         }
 
@@ -36,17 +41,17 @@ namespace PL.Controllers
         [HttpGet]
         public IHttpActionResult Get()
         {
-            if (User.IsInRole(Roles.Manager.ToString()))
-                return Ok(Mapper.Map<List<FolderView>>(_folderService.GetAll()));
-            return Ok(Mapper.Map<List<FolderView>>(
-                _folderService.GetAllFolderContentByUserId(User.Identity.GetUserId())));
+            //if (User.IsInRole(Roles.Manager.ToString()))
+            //    return Ok(Mapper.Map<List<FolderView>>(_folderService.GetAll()));
+
+            return Ok(Mapper.Map<FolderView>(_folderService.GetRootFolderContentByUserId(User.Identity.GetUserId())));  
         }
         //Ok
         [HttpGet]
         [Route("{id}")]
-        public IHttpActionResult Get(int id)
+        public IHttpActionResult GetByUserId(int id)
         {
-            return Ok(Mapper.Map<FolderView>(_folderService.Get(id)));
+            return Ok(Mapper.Map<FolderView>(_folderService.GetByUserId(id, User.Identity.GetUserId())));
         }
         //Ok
         [HttpPut]
@@ -62,7 +67,7 @@ namespace PL.Controllers
             return StatusCode(HttpStatusCode.Forbidden);
         }
 
-        //
+        //Ok
         [HttpDelete]
         [Route("{id}")]
         public IHttpActionResult DeleteFolder(int id)
@@ -71,14 +76,7 @@ namespace PL.Controllers
             var folderDto = _folderService.Get(id);
             if (!User.IsInRole("Admin") && folderDto.UserId != User.Identity.GetUserId())
                 return BadRequest($"File not found");
-            if (!folderDto.Files.Count.Equals(0))
-                foreach (var file in folderDto.Files)
-                    _fileService.Delete(file);
 
-            if (!folderDto.Folders.Count.Equals(0))
-                foreach (var folder in folderDto.Folders)
-                    DeleteFolder(folder.Id);
-            
             _folderService.Delete(folderDto);
             return Ok();
         }
