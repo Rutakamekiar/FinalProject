@@ -15,7 +15,7 @@ namespace BLL.Services
     public sealed class FileService : IFileService, IDisposable
     {
         private readonly IUnitOfWork _data;
-        private const string RootFilePath = @"C:\Users\Vlad\Desktop\FinalProject\Content\";
+        private const string RootFilePath = @"C:\Users\Vlad\Desktop\Angular\Content\";
 
         public FileService(IUnitOfWork data)
         {

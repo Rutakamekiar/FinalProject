@@ -14,7 +14,7 @@ namespace BLL.Services
     {
         private readonly IUnitOfWork _data;
         private IFileService _fileService;
-        public const string RootPath = @"C:\Users\Vlad\Desktop\FinalProject\Content\";
+        public const string RootPath = @"C:\Users\Vlad\Desktop\Angular\Content\";
 
         public FolderService(IUnitOfWork data, IFileService fileService)
         {
@@ -25,6 +25,11 @@ namespace BLL.Services
         public HashSet<FolderDTO> GetAll()
         {
             return Mapper.Map<HashSet<FolderDTO>>(_data.Folders.GetAll());
+        }
+
+        public List<FolderDTO> GetAllRootFolders()
+        {
+            return GetAll().Where(f => f.ParentFolderId == null).ToList();
         }
         //Ok
         public FolderDTO GetRootFolderContentByUserId(string userId)
@@ -79,6 +84,7 @@ namespace BLL.Services
 
             _data.Save();
         }
+        //Ok
         public void Delete(FolderDTO folderDto)
         {
             if (!folderDto.Files.Count.Equals(0))

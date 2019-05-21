@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Net;
 using System.Web;
 using System.Web.Http;
+using System.Web.Security;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using PL.Models;
+using Roles = PL.Models.Roles;
 
 namespace PL.Controllers
 {
@@ -41,9 +44,6 @@ namespace PL.Controllers
         [HttpGet]
         public IHttpActionResult Get()
         {
-            //if (User.IsInRole(Roles.Manager.ToString()))
-            //    return Ok(Mapper.Map<List<FolderView>>(_folderService.GetAll()));
-
             return Ok(Mapper.Map<FolderView>(_folderService.GetRootFolderContentByUserId(User.Identity.GetUserId())));  
         }
         //Ok
@@ -80,5 +80,22 @@ namespace PL.Controllers
             _folderService.Delete(folderDto);
             return Ok();
         }
+
+
+        [Authorize(Roles = "Admin")]
+        [Route("users")]
+        public IHttpActionResult GetAll()
+        {
+            return Ok(Mapper.Map<List<FolderView>>(_folderService.GetAllRootFolders()));
+        }
+        [Authorize(Roles = "Admin")]
+        [Route("users/{id}")]
+        public IHttpActionResult GetById(int id)
+        {
+            return Ok(Mapper.Map<FolderView>(_folderService.Get(id)));
+        }
+
+
+     
     }
 }

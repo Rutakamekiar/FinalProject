@@ -9,6 +9,7 @@ namespace BLL.Interfaces
         FolderDTO GetRootFolderContentByUserId(string userId);
         FolderDTO CreateFolderInFolder(FolderDTO parent, string name);
         FolderDTO GetByUserId(int id, string userId);
+        List<FolderDTO> GetAllRootFolders();
 
         bool IsFolderExists(FolderDTO file);
         void EditFolder(int id, FolderDTO item);
