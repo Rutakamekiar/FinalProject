@@ -1,0 +1,16 @@
+<div>
+  <div *ngIf="creating">
+    <form method='post'>
+      <input type="file" value='Select' (change)="handleFileInput($event.target.files)">
+      <input type="radio" id="publicRadio" name="public" value="1"  checked [(ngModel)]="accessLevel" >
+      <label for="publicRadio">public </label> 
+      <input type="radio" id="privateRadio" name="private" value="0" [(ngModel)]="accessLevel">
+      <label for="privateRadio">private </label> 
+      <button type="submit" (click)="sendFile()" [disabled]='!accessLevel || !fileToUpload'>Send</button>
+      <button type="button" (click)="creating = false">Close form</button>
+    </form>
+  </div>
+  <div *ngIf="!creating">
+      <button type="button" (click)="creating = true">CreateFile</button>
+  </div>
+</div>

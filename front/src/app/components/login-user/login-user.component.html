@@ -1,0 +1,18 @@
+<div>
+  <form>
+    <span>Login user</span>
+    <div>
+      <input type="text" name = "userName" [(ngModel)] = "userLogin.userName"  placeholder="Input your Email"> 
+      <span>Email</span>
+    </div>
+    <div>
+      <input type="password"name = "password" [(ngModel)] = "userLogin.password" placeholder="Input your Password">
+      <span>Password</span>
+    </div>
+    <div>
+      <button type="submit" (click)="onCreateClick()">Login</button>
+    </div>
+     <div *ngIf="isLoading">Loading...</div>
+    <div *ngIf="errMessage">{{errMessage}}</div>
+  </form>
+</div>

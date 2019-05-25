@@ -1,0 +1,32 @@
+<div *ngIf="myFolder">
+  <h1>Folder name: {{myFolder.Name}}</h1>
+  <app-logout-user></app-logout-user>
+  <app-create-folder></app-create-folder><br>
+  <app-upload-file></app-upload-file><br>
+  <div *ngIf="myFolder.ParentFolderId">
+      <button [routerLink]="['/folders', myFolder.ParentFolderId]" 
+      (click)="openFolder(myFolder.ParentFolderId)">GetBack</button>
+  </div>  
+  <div *ngIf="myFolder.Folders.length > 0">
+    <h2>Folders</h2>
+    <ul *ngFor="let folder of myFolder.Folders">
+      <li>
+        <button [routerLink]="['/folders', folder.Id]" 
+        (click)="openFolder(folder.Id)">{{folder.Name}} with id = {{folder.Id}}</button>
+        <app-delete-folder [folderId]='folder.Id'></app-delete-folder>
+        <app-update-folder [folder]='folder'></app-update-folder>
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="myFolder.Files.length > 0">
+    <h2>Files</h2>
+    <ul *ngFor="let file of myFolder.Files">
+      <li>
+        {{file.Name}}
+        <app-delete-file [fileId]='file.Id'></app-delete-file>
+        <app-update-file [file]='file'></app-update-file>
+        <app-download-file [file]='file'></app-download-file>
+      </li>
+    </ul>
+  </div>
+</div>

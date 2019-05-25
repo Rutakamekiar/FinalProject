@@ -1,0 +1,27 @@
+<div>
+  <form>
+    <span>Register user</span>
+    <div>
+      <input type="text" name = "Email" 
+        [(ngModel)] = "userRegister.Email"  placeholder="Input your Email">
+      <span>Email</span>
+    </div>
+    <div>
+      <input type="password" name = "Password" 
+        [(ngModel)] = "userRegister.Password" placeholder="Input your Password">
+      <span>Password</span>
+    </div>
+    <div>
+      <input type="password"name = "ConfirmPassword" 
+        [(ngModel)] = "userRegister.ConfirmPassword" placeholder="Confirm your Password">
+      <span>ConfirmPassword</span>
+    </div>
+    <div>
+      <button type="submit" (click)="onCreateClick()">Register</button>
+    </div>
+    <div *ngIf="isLoading">Loading...</div>
+    <div *ngIf="errMessage">{{errMessage}}</div>
+
+  </form>
+</div>
+
